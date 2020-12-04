@@ -1,6 +1,7 @@
 package verifygo
 
 import (
+	"github.com/loticket/verifygo/utils"
 	"sort"
 	"strconv"
 	"strings"
@@ -51,10 +52,11 @@ func (bp *BasePlay) Ball(balls []string, ballReal map[string]uint) bool {
 	var ballsNum int = len(balls)
 	var ballBak []string = make([]string, ballsNum)
 	copy(ballBak, balls)
-	sort.Strings(balls)
+	sort.Sort(utils.StringNumArr(balls))
 	//验证号码是否正确
 	for k, v := range balls {
 		_, ok := ballReal[v]
+
 		if !ok || !strings.EqualFold(v, ballBak[k]) {
 			flag = false
 			break
