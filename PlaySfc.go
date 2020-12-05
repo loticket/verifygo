@@ -109,6 +109,8 @@ func (play *PlaySfc) checkBallSingle() bool {
 		return false
 	}
 
+	play.ticketNum = 1
+
 	return true
 }
 
