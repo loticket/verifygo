@@ -11,7 +11,7 @@ type LotteryInterface interface {
 	GetTicketNum() int
 	CheckPlaytype() bool
 	PlayCheck() bool
-	GetSpliteTicket()
+	GetSpliteTicket() []NumLottery
 }
 
 type Instance func() LotteryInterface

@@ -51,7 +51,17 @@ func (plc *PlayQlc) Verification() (bool, error) {
 }
 
 //拆票
-func (plc *PlayQlc) GetSpliteTicket() {}
+func (plc *PlayQlc) GetSpliteTicket() []NumLottery {
+	var multi []int = plc.spliteMultiple()
+	var newTicket []NumLottery = make([]NumLottery, 0)
+	var ticket NumLottery = plc.numLottery
+	for _, val := range multi {
+		ticket.Multiple = val
+		ticket.Money = val * ticket.BetNum * 2
+		newTicket = append(newTicket, ticket)
+	}
+	return newTicket
+}
 
 //验证子玩法和投注方式
 func (plc *PlayQlc) CheckPlaytype() bool {

@@ -18,9 +18,10 @@ func Test_main(t *testing.T) {
 
 	t.Log("-------------")
 
-	lottery.CreateTicket(1, 3, "09,14,24|04,08,16,23,26", 10, 5, 1)
+	lottery.CreateTicket(1, 3, "09,14,24|04,08,16,23,26", 10000, 5, 1000)
 
 	_, err = lottery.Verification()
+	fmt.Println(lottery.GetSpliteTicket())
 	t.Error(err)
 
 }

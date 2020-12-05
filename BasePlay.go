@@ -7,6 +7,9 @@ import (
 	"strings"
 )
 
+const MAXMULTIPLE = 99 //最大倍数
+const MAXMONEY = 20000 //票最大金额
+
 //彩种投注号码定义
 type ball struct {
 	min, max int             //号码的个数
@@ -43,6 +46,48 @@ func (bp *BasePlay) CreateTicket(playtype int, lottype int, lotnum string, money
 //获取计算出来的注数
 func (bp *BasePlay) GetTicketNum() int {
 	return bp.ticketNum
+}
+
+//拆单获取拆单的倍数
+func (bp *BasePlay) spliteMultiple() []int {
+	if bp.numLottery.Money <= MAXMONEY && bp.numLottery.Multiple <= MAXMULTIPLE {
+		return []int{1}
+	}
+
+	//如果这张票超过两万 就按照倍数拆票
+	//按照倍数钞票
+	var singleMoney int = bp.numLottery.Money / bp.numLottery.Multiple //单注票的价格
+
+	//求出最大倍数
+	var maxMultiple int = MAXMONEY / singleMoney
+	var singleMultiple int = MAXMULTIPLE
+	if maxMultiple < MAXMULTIPLE {
+		singleMultiple = maxMultiple
+	}
+
+	var ticketMutiple []int
+
+	var allMultiple int = bp.numLottery.Multiple
+
+	for {
+		if allMultiple == 0 || allMultiple < 0 {
+			break
+		}
+		var tempMul int = 0
+		if allMultiple > singleMultiple {
+			tempMul = singleMultiple
+		} else {
+			tempMul = allMultiple
+		}
+
+		ticketMutiple = append(ticketMutiple, tempMul)
+
+		allMultiple = allMultiple - singleMultiple
+
+	}
+
+	return ticketMutiple
+
 }
 
 //检查红球是否在规定的里面

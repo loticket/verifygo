@@ -141,7 +141,21 @@ func (pd *PlayDlt) checkBallNormal() bool {
 }
 
 //拆票
-func (pd *PlayDlt) GetSpliteTicket() {}
+func (pd *PlayDlt) GetSpliteTicket() []NumLottery {
+	var multi []int = pd.spliteMultiple()
+	var oneMoney int = 2
+	if pd.numLottery.PlayType == 2 {
+		oneMoney = 3
+	}
+	var newTicket []NumLottery = make([]NumLottery, 0)
+	var ticket NumLottery = pd.numLottery
+	for _, val := range multi {
+		ticket.Multiple = val
+		ticket.Money = val * ticket.BetNum * oneMoney
+		newTicket = append(newTicket, ticket)
+	}
+	return newTicket
+}
 
 //单式
 func (pd *PlayDlt) checkBallSingle() bool {

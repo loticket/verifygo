@@ -44,7 +44,17 @@ func (pq *PlayQxc) Verification() (bool, error) {
 }
 
 //拆票
-func (pq *PlayQxc) GetSpliteTicket() {}
+func (pq *PlayQxc) GetSpliteTicket() []NumLottery {
+	var multi []int = pq.spliteMultiple()
+	var newTicket []NumLottery = make([]NumLottery, 0)
+	var ticket NumLottery = pq.numLottery
+	for _, val := range multi {
+		ticket.Multiple = val
+		ticket.Money = val * ticket.BetNum * 2
+		newTicket = append(newTicket, ticket)
+	}
+	return newTicket
+}
 
 //验证子玩法和投注方式
 func (pq *PlayQxc) CheckPlaytype() bool {

@@ -87,7 +87,17 @@ func (ps *PlaySsq) PlayCheck() bool {
 }
 
 //拆票
-func (ps *PlaySsq) GetSpliteTicket() {}
+func (ps *PlaySsq) GetSpliteTicket() []NumLottery {
+	var multi []int = ps.spliteMultiple()
+	var newTicket []NumLottery = make([]NumLottery, 0)
+	var ticket NumLottery = ps.numLottery
+	for _, val := range multi {
+		ticket.Multiple = val
+		ticket.Money = val * ticket.BetNum * 2
+		newTicket = append(newTicket, ticket)
+	}
+	return newTicket
+}
 
 //检查单式格式是否正确
 func (ps *PlaySsq) checkBallSingle() bool {
