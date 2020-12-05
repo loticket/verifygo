@@ -8,7 +8,7 @@ import (
 
 func Test_main(t *testing.T) {
 	fmt.Println("--------开始调试------")
-	lottery, err := NewLottery("qlc")
+	lottery, err := NewLottery("rxn")
 	t.Log(err)
 	if err != nil {
 		log.Println("不存在")
@@ -18,7 +18,7 @@ func Test_main(t *testing.T) {
 
 	t.Log("-------------")
 
-	lottery.CreateTicket(1, 3, "09,14,24|04,08,16,23,26", 10000, 5, 1000)
+	lottery.CreateTicket(1, 3, "3,(1 0),1,1,1,1,1,1,1,1,1,#,#,#", 180, 90, 1)
 
 	_, err = lottery.Verification()
 	fmt.Println(lottery.GetSpliteTicket())

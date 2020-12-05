@@ -116,6 +116,20 @@ func (pls *PlayPls) CheckPlaytype() bool {
 
 }
 
+//拆票
+func (pls *PlayPls) GetSpliteTicket() []NumLottery {
+	var multi []int = pls.spliteMultiple()
+	var oneMoney int = 2
+	var newTicket []NumLottery = make([]NumLottery, 0)
+	var ticket NumLottery = pls.numLottery
+	for _, val := range multi {
+		ticket.Multiple = val
+		ticket.Money = val * ticket.BetNum * oneMoney
+		newTicket = append(newTicket, ticket)
+	}
+	return newTicket
+}
+
 //直选单式
 //格式为 1,2,3
 func (pls *PlayPls) zhixuanSingle() bool {

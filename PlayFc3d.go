@@ -83,6 +83,20 @@ func (pls *PlayFc3d) PlayCheck() bool {
 	return checkRes
 }
 
+//拆票
+func (pls *PlayFc3d) GetSpliteTicket() []NumLottery {
+	var multi []int = pls.spliteMultiple()
+	var oneMoney int = 2
+	var newTicket []NumLottery = make([]NumLottery, 0)
+	var ticket NumLottery = pls.numLottery
+	for _, val := range multi {
+		ticket.Multiple = val
+		ticket.Money = val * ticket.BetNum * oneMoney
+		newTicket = append(newTicket, ticket)
+	}
+	return newTicket
+}
+
 //检查子玩法和投注方式是否正确
 
 func (pls *PlayFc3d) CheckPlaytype() bool {
