@@ -154,7 +154,7 @@
 单式 | 1 | 1 | 3,3,3,3,3,3,3,3,3,3,3,3     |  1 | 2
 复式 | 1 | 2 | 3 1,3,3,3,3,3,3,3,3,3,3,3  |  2 | 4
 
-> 调用代码实例
+> 调用代码实例 版本（1.0）(简单工厂模式实现)
 
 ```
 package main
@@ -184,4 +184,36 @@ func main() {
 }
 
 ```
+
+> 调用代码实例 版本（2.0）（使用工厂模式和策略模式对架构重构实现代码减少，灵活扩展）
+
+```
+package main
+
+import (
+	"fmt"
+	"github.com/loticket/verifygo"
+)
+
+func main() {
+	lot, err := NewLottery("qxc")
+	if err != nil {
+		log.Println("不存在")
+		return
+	}
+
+	lotterys := NewPlayStrategy().Lottery(lot)
+
+	lotterys.SetTicket(1, 2, "4;3;3,5;3,7;4;6-4,6,14", 2400, 12, 100) //把票信息传入
+ 
+	lotterys.Verification() //验证票格式
+
+
+	lotterys.GetSpliteTicket() //拆票
+
+
+}
+
+```
+
 ------

@@ -1,7 +1,6 @@
 package verifygo
 
 import (
-	"errors"
 	"github.com/loticket/verifygo/utils"
 	"sort"
 	"strconv"
@@ -11,40 +10,6 @@ import (
 //福彩3d投注
 type PlayFc3d struct {
 	BasePlay //投注基本信息
-}
-
-//验证投注的号码是否正确
-func (pls *PlayFc3d) Verification() (bool, error) {
-	var flags bool = pls.CheckPlaytype()
-	if !flags {
-		return false, errors.New("子玩法或者投注方式错误")
-	}
-
-	flags = pls.PlayCheck()
-
-	if !flags {
-		return false, errors.New("投注号码错误")
-	}
-
-	if pls.ticketNum != pls.numLottery.BetNum {
-		return false, errors.New("注数计算错误")
-	}
-
-	//单注不能超过两万
-	if (pls.numLottery.Money / pls.numLottery.Multiple) > 20000 {
-		return false, errors.New("单注金额不能超过2万")
-	}
-
-	var oneMoney int = 2
-	if pls.numLottery.PlayType == 2 {
-		oneMoney = 3
-	}
-
-	if pls.ticketNum*oneMoney*pls.numLottery.Multiple != pls.numLottery.Money {
-		return false, errors.New("金额计算错误")
-	}
-
-	return true, nil
 }
 
 //验证投注的号码是否正确
@@ -83,22 +48,7 @@ func (pls *PlayFc3d) PlayCheck() bool {
 	return checkRes
 }
 
-//拆票
-func (pls *PlayFc3d) GetSpliteTicket() []NumLottery {
-	var multi []int = pls.spliteMultiple()
-	var oneMoney int = 2
-	var newTicket []NumLottery = make([]NumLottery, 0)
-	var ticket NumLottery = pls.numLottery
-	for _, val := range multi {
-		ticket.Multiple = val
-		ticket.Money = val * ticket.BetNum * oneMoney
-		newTicket = append(newTicket, ticket)
-	}
-	return newTicket
-}
-
 //检查子玩法和投注方式是否正确
-
 func (pls *PlayFc3d) CheckPlaytype() bool {
 	if pls.numLottery.PlayType != 1 && pls.numLottery.PlayType != 2 && pls.numLottery.PlayType != 3 && pls.numLottery.PlayType != 4 {
 		return false

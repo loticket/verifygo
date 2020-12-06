@@ -27,20 +27,15 @@ type NumLottery struct {
 }
 
 type BasePlay struct {
-	ticketNum  int        //计算出来的注数
-	numLottery NumLottery //一张票
+	ticketNum    int          //计算出来的注数
+	numLottery   NumLottery   //一张票
+	spliteTicket []NumLottery //存储拆过票后的票
 }
 
 //设置投注票信息
-func (bp *BasePlay) CreateTicket(playtype int, lottype int, lotnum string, money int, betnum int, multiple int) {
-	bp.numLottery = NumLottery{
-		PlayType: playtype,
-		LotType:  lottype,
-		LotNum:   lotnum,
-		Money:    money,
-		BetNum:   betnum,
-		Multiple: multiple,
-	}
+func (bp *BasePlay) CreateTicket(ticket NumLottery) {
+	bp.numLottery = ticket
+	bp.spliteTicket = []NumLottery{ticket}
 }
 
 //获取计算出来的注数
@@ -48,46 +43,28 @@ func (bp *BasePlay) GetTicketNum() int {
 	return bp.ticketNum
 }
 
-//拆单获取拆单的倍数
-func (bp *BasePlay) spliteMultiple() []int {
-	if bp.numLottery.Money <= MAXMONEY && bp.numLottery.Multiple <= MAXMULTIPLE {
-		return []int{1}
-	}
+//获取票的倍数
+func (bp *BasePlay) GetMultiple() int {
+	return bp.numLottery.Multiple
+}
 
-	//如果这张票超过两万 就按照倍数拆票
-	//按照倍数钞票
-	var singleMoney int = bp.numLottery.Money / bp.numLottery.Multiple //单注票的价格
+//获取票投注金额
+func (bp *BasePlay) GetBetNum() int {
+	return bp.numLottery.BetNum
+}
 
-	//求出最大倍数
-	var maxMultiple int = MAXMONEY / singleMoney
-	var singleMultiple int = MAXMULTIPLE
-	if maxMultiple < MAXMULTIPLE {
-		singleMultiple = maxMultiple
-	}
+//获取票投注金额
+func (bp *BasePlay) GetMoney() int {
+	return bp.numLottery.Money
+}
 
-	var ticketMutiple []int
+//获取彩票的票数
+func (bp *BasePlay) GetSpliteTicket() []NumLottery {
+	return bp.spliteTicket
+}
 
-	var allMultiple int = bp.numLottery.Multiple
-
-	for {
-		if allMultiple == 0 || allMultiple < 0 {
-			break
-		}
-		var tempMul int = 0
-		if allMultiple > singleMultiple {
-			tempMul = singleMultiple
-		} else {
-			tempMul = allMultiple
-		}
-
-		ticketMutiple = append(ticketMutiple, tempMul)
-
-		allMultiple = allMultiple - singleMultiple
-
-	}
-
-	return ticketMutiple
-
+func (bp *BasePlay) GetNumberLottery() NumLottery {
+	return bp.numLottery
 }
 
 //检查红球是否在规定的里面

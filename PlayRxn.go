@@ -1,7 +1,6 @@
 package verifygo
 
 import (
-	"errors"
 	"github.com/loticket/verifygo/utils"
 	"regexp"
 	"sort"
@@ -10,37 +9,7 @@ import (
 
 //任选九
 type PlayRxn struct {
-	BasePlay     //投注基本信息
-	spliteTicket []NumLottery
-}
-
-//验证投注的号码是否正确
-func (play *PlayRxn) Verification() (bool, error) {
-	var flags bool = play.CheckPlaytype()
-	if !flags {
-		return false, errors.New("子玩法或者投注方式错误")
-	}
-
-	flags = play.PlayCheck()
-
-	if !flags {
-		return false, errors.New("投注号码错误")
-	}
-
-	if play.ticketNum != play.numLottery.BetNum {
-		return false, errors.New("注数计算错误")
-	}
-
-	//单注不能超过两万
-	if (play.numLottery.Money / play.numLottery.Multiple) > 20000 {
-		return false, errors.New("单注金额不能超过2万")
-	}
-
-	if play.ticketNum*2*play.numLottery.Multiple != play.numLottery.Money {
-		return false, errors.New("金额计算错误")
-	}
-
-	return true, nil
+	BasePlay //投注基本信息
 }
 
 //验证子玩法和投注方式
@@ -67,23 +36,6 @@ func (play *PlayRxn) PlayCheck() bool {
 		checkRes = play.checkBallDanTuo()
 	}
 	return checkRes
-}
-
-//拆票
-func (play *PlayRxn) GetSpliteTicket() []NumLottery {
-	var multi []int = play.spliteMultiple()
-	var oneMoney int = 2
-	var newTicket []NumLottery = make([]NumLottery, 0)
-	for i := 0; i < len(play.spliteTicket); i++ {
-		var tempTikcket NumLottery = play.spliteTicket[i]
-		for _, val := range multi {
-			tempTikcket.Multiple = val
-			tempTikcket.Money = val * tempTikcket.BetNum * oneMoney
-			newTicket = append(newTicket, tempTikcket)
-		}
-	}
-
-	return newTicket
 }
 
 //单式检查

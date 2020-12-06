@@ -1,7 +1,6 @@
 package verifygo
 
 import (
-	"errors"
 	"github.com/loticket/verifygo/utils"
 	"strings"
 )
@@ -24,35 +23,6 @@ var (
 
 	blueSBall = ball{1, 16, map[string]uint{"01": 1, "02": 2, "03": 3, "04": 4, "05": 5, "06": 6, "07": 7, "08": 8, "09": 9, "10": 10, "11": 11, "12": 12, "13": 13, "14": 14, "15": 15, "16": 16}}
 )
-
-//验证投注的号码是否正确
-func (ps *PlaySsq) Verification() (bool, error) {
-	var flags bool = ps.CheckPlaytype()
-	if !flags {
-		return false, errors.New("子玩法或者投注方式错误")
-	}
-
-	flags = ps.PlayCheck()
-
-	if !flags {
-		return false, errors.New("投注号码错误")
-	}
-
-	if ps.ticketNum != ps.numLottery.BetNum {
-		return false, errors.New("注数计算错误")
-	}
-
-	//单注不能超过两万
-	if (ps.numLottery.Money / ps.numLottery.Multiple) > 20000 {
-		return false, errors.New("单注金额不能超过2万")
-	}
-
-	if ps.ticketNum*2*ps.numLottery.Multiple != ps.numLottery.Money {
-		return false, errors.New("金额计算错误")
-	}
-
-	return true, nil
-}
 
 //验证子玩法和投注方式
 func (ps *PlaySsq) CheckPlaytype() bool {
@@ -84,19 +54,6 @@ func (ps *PlaySsq) PlayCheck() bool {
 
 	return checkRes
 
-}
-
-//拆票
-func (ps *PlaySsq) GetSpliteTicket() []NumLottery {
-	var multi []int = ps.spliteMultiple()
-	var newTicket []NumLottery = make([]NumLottery, 0)
-	var ticket NumLottery = ps.numLottery
-	for _, val := range multi {
-		ticket.Multiple = val
-		ticket.Money = val * ticket.BetNum * 2
-		newTicket = append(newTicket, ticket)
-	}
-	return newTicket
 }
 
 //检查单式格式是否正确
